@@ -14,14 +14,20 @@ from PIL import Image
 
 # Scientific Libraries
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches  # <--- NEW IMPORT
+import matplotlib.image as mpimg      # <--- NEW IMPORT (Good for labeling)
 import numpy as np
 import scipy
 import pandas as pd
 import rdkit
 
 # --- CONFIGURATION ---
-# Render Persistent Disk Mount Path
+# Render/DigitalOcean Persistent Disk Mount Path
+# NOTE: On Digital Ocean, ensuring this path is writable is key.
+# If you are using DO App Platform with a Persistent Volume, check the mount path.
+# If using ephemeral storage (standard containers), this path works but wipes on redeploy.
 IMAGE_STORAGE_PATH = "/var/data/images"
+
 # Max file size in Bytes (100KB = 102400 bytes)
 MAX_SIZE_BYTES = 100 * 1024 
 # File retention time (24 hours in seconds)
@@ -112,8 +118,17 @@ def compress_image(image_bytes):
 def execute_plot_code(request: CodeRequest):
 
     # Define the sandbox environment
+    # I ADDED 'patches' AND 'mpimg' HERE TO FIX YOUR ERROR
     local_scope = {
-        "plt": plt, "np": np, "scipy": scipy, "pd": pd, "io": io, "rdkit": rdkit, "image_bytes": None
+        "plt": plt, 
+        "patches": patches,  # <--- THIS FIXES THE ERROR
+        "mpimg": mpimg,      # <--- Good to have
+        "np": np, 
+        "scipy": scipy, 
+        "pd": pd, 
+        "io": io, 
+        "rdkit": rdkit, 
+        "image_bytes": None
     }
 
     try:
@@ -137,7 +152,7 @@ def execute_plot_code(request: CodeRequest):
                 f.write(final_jpeg_bytes)
 
             # D. Create the Public URL
-            # ⚠️ REPLACE THIS WITH YOUR NEW RENDER URL ⚠️
+            # ⚠️ REPLACE THIS WITH YOUR DIGITAL OCEAN URL ⚠️
             base_url = "https://pythonimagegen-zvpdv.ondigitalocean.app"
             direct_url = f"{base_url}/images/{filename}"
 
@@ -147,6 +162,7 @@ def execute_plot_code(request: CodeRequest):
             raise HTTPException(status_code=400, detail="Code ran but 'image_bytes' was None.")
 
     except Exception as e:
+        # Return the actual python error to help debugging
         raise HTTPException(status_code=500, detail=f"Execution Error: {str(e)}")
 
 
