@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+matplotlib
+numpy
+scipy
+pandas
+rdkit-pypi
+Pillow
+requests
