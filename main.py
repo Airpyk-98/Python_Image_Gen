@@ -138,7 +138,7 @@ def execute_plot_code(request: CodeRequest):
 
             # D. Create the Public URL
             # ⚠️ REPLACE THIS WITH YOUR NEW RENDER URL ⚠️
-            base_url = "https://YOUR_NEW_SERVICE_NAME.onrender.com"
+            base_url = "https://pythonimagegen-zvpdv.ondigitalocean.app"
             direct_url = f"{base_url}/images/{filename}"
 
             return JSONResponse(content={"url": direct_url}, status_code=200)
