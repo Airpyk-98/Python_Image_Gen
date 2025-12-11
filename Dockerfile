@@ -1,14 +1,14 @@
 # Use a standard Python 3.11 image (Debian-based)
 FROM python:3.11-slim
 
-# --- THE FIX IS HERE ---
-# Install system dependencies needed for RDKit and Matplotlib graphics
-# libxrender1, libxext6, and libgl1 are crucial for image generation on Linux
+# --- THE FIXES ARE HERE ---
+# 1. Install system dependencies needed for RDKit and Matplotlib graphics
+# 2. Replaced the missing 'libgl1-mesa-glx' with the canonical 'libgl1'
 RUN apt-get update && apt-get install -y \
     build-essential \
     libxrender1 \
     libxext6 \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
