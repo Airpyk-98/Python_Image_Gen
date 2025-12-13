@@ -132,8 +132,9 @@ def execute_plot_code(request: CodeRequest):
     }
 
     try:
-        # Execute the generated code
-        exec(request.code, {}, local_scope)
+        # Execute the generated code with SHARED scope for Globals and Locals
+        # This allows functions defined by the AI to see 'plt', 'np', etc.
+        exec(request.code, local_scope, local_scope)
         raw_image_bytes = local_scope.get("image_bytes")
 
         if raw_image_bytes:
